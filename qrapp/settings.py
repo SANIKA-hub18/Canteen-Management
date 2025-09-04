@@ -16,7 +16,8 @@ DEBUG = True
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
-    'qr-code-scanner-and-generator.onrender.com'
+    'qr-code-scanner-and-generator.onrender.com',
+    'canteen-management-wwmm.onrender.com'
 ]
 
 # Load .env variables
