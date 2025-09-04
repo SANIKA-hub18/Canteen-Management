@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Employees in {{ department.name }}</title>
+  
+  <!-- Bootstrap CSS CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  
+  <style>
+    body {
+      background: #f5f7fa;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .container {
+      margin-top: 40px;
+      max-width: 900px;
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    }
+    h2 {
+      color: #2c3e50;
+      font-weight: 700;
+      margin-bottom: 25px;
+    }
+    table {
+      border-collapse: separate !important;
+      border-spacing: 0 12px !important;
+      width: 100%;
+    }
+    thead tr {
+      background-color: #34495e;
+      color: white;
+      border-radius: 10px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+    }
+    thead th {
+      padding: 15px 20px;
+      text-align: left;
+      font-weight: 600;
+    }
+    tbody tr {
+      background: #ecf0f1;
+      border-radius: 10px;
+      transition: background-color 0.3s ease;
+      cursor: default;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    tbody tr:hover {
+      background-color: #d6e6ff;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    }
+    tbody td {
+      padding: 14px 20px;
+      vertical-align: middle;
+      color: #34495e;
+    }
+    tbody td a {
+      color: #2980b9;
+      text-decoration: none;
+    }
+    tbody td a:hover {
+      text-decoration: underline;
+    }
+    .btn-back {
+      margin-top: 30px;
+      color: #2980b9;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn-back:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Employees in {{ department.name }}</h2>
+
+    {% if employees %}
+    <table>
+      <thead>
+        <tr>
+          <th>Employee Name</th>
+          <th>Email ID</th>
+          <th>Department</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for emp in employees %}
+        <tr>
+          <td><a href="{% url 'qr:employee_report' emp.id %}">{{ emp.name }}</a></td>
+          <td><a href="mailto:{{ emp.email }}">{{ emp.email }}</a></td>
+          <td>{{ department.name }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p>No employees found in this department.</p>
+    {% endif %}
+
+    <a href="{% url 'qr:set_department' %}?company={{ selected_company_id }}" class="btn-back">← Back to Departments</a>
+  </div>
+</body>
+</html>

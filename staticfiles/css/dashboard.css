@@ -1,0 +1,38 @@
+/* dashboard.css */
+
+body {
+  background-color: #0b1c2c;
+  color: white;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.sidebar {
+  height: 100vh;
+  background-color: #142b3f;
+  padding: 20px;
+}
+
+.sidebar a {
+  color: white;
+  text-decoration: none;
+  display: block;
+  margin: 15px 0;
+}
+
+.sidebar a:hover {
+  text-decoration: underline;
+}
+
+.topbar {
+  background-color: #142b3f;
+  color: white;
+  padding: 10px 20px;
+}
+
+.card {
+  background-color: #ffffff;
+  color: #000000;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}

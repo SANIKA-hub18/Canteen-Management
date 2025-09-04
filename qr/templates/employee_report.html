@@ -1,0 +1,118 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Monthly Report - {{ employee.name }}</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- DataTables CSS -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
+
+  <style>
+    body {
+      background-color: #f5f7fa;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    }
+    h5 {
+      font-weight: 700;
+      color: #2c3e50;
+      margin-bottom: 20px;
+    }
+    .download-buttons a {
+      margin-right: 10px;
+      margin-bottom: 15px;
+    }
+    table.dataTable tbody tr {
+      background: #ecf0f1;
+      border-radius: 10px;
+      transition: background 0.3s ease;
+      cursor: default;
+    }
+    table.dataTable tbody tr:hover {
+      background-color: #d6e6ff;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    table.dataTable thead tr {
+      background-color: #34495e;
+      color: white;
+    }
+    .btn-back {
+      margin-top: 20px;
+      display: inline-block;
+      font-weight: 600;
+      text-decoration: none;
+      color: #2980b9;
+    }
+    .btn-back:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h5>📊 Monthly Report - {{ employee.name }}</h5>
+
+  <!-- Download Buttons -->
+  <div class="download-buttons">
+    <a href="?download=csv" class="btn btn-outline-primary">⬇️ Download CSV</a>
+    <a href="?download=excel" class="btn btn-outline-success">⬇️ Download Excel</a>
+    <a href="?download=pdf" class="btn btn-outline-danger">⬇️ Download PDF</a>
+  </div>
+
+  <table id="reportTable" class="table table-striped table-bordered">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Time</th>
+        <th>Meal</th>
+        <th>Qty</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in records %}
+        <tr>
+          <td>{{ r.date }}</td>
+          <td>{{ r.time }}</td>
+          <td>{{ r.meal }}</td>
+          <td>{{ r.quantity }}</td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="4" class="text-center">No records</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <a href="{% url 'qr:department_employees' employee.department.id %}?company={{ employee.company.id }}" class="btn-back">← Back to Employees</a>
+</div>
+
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+
+<script>
+  $(document).ready(function() {
+    $('#reportTable').DataTable({
+      "pageLength": 10,
+      "order": [[ 0, "desc" ]],  // latest date first
+      "lengthChange": false,
+      "info": false
+    });
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,88 @@
+{% load static %}
+{% block content %}
+
+<div class="container mt-5 p-5 bg-white rounded-5 shadow-lg" style="max-width: 1100px;">
+    <h2 class="mb-5 text-center text-dark fw-bold display-5">⏰ Time-based Meal Slot Settings</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success alert-dismissible fade show shadow-sm py-3" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="POST" class="mt-4">
+        {% csrf_token %}
+        <div class="table-responsive">
+            <table class="table table-bordered text-center align-middle shadow-sm table-hover">
+                <thead class="table-light fs-5">
+                    <tr>
+                        <th class="py-3 border">#</th>
+                        <th class="py-3 border">Meal Slot</th>
+                        <th class="py-3 border">Start Time</th>
+                        <th class="py-3 border">End Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for slot in slots %}
+                    <tr class="slot-row fs-5">
+                        <td class="py-3 border">{{ forloop.counter }}</td>
+                        <td class="fw-semibold py-3 border">{{ slot.name }}</td>
+                        <td class="py-3 border">
+                            <input type="time" name="start_time_{{ slot.id }}" value="{{ slot.start_time|time:'H:i' }}" class="form-control text-center form-control-lg" required>
+                        </td>
+                        <td class="py-3 border">
+                            <input type="time" name="end_time_{{ slot.id }}" value="{{ slot.end_time|time:'H:i' }}" class="form-control text-center form-control-lg" required>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="text-center mt-5">
+            <button type="submit" class="btn btn-secondary btn-lg px-5 py-3 shadow-sm fw-bold fs-5">
+                💾 Save Changes
+            </button>
+        </div>
+    </form>
+</div>
+
+<style>
+body {
+    background: #f7f7f7;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.table-bordered {
+    border: 2px solid #ccc;
+}
+
+.table-bordered th, .table-bordered td {
+    border: 1px solid #ccc !important;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #f1f3f6;
+    transition: all 0.3s ease;
+}
+
+.form-control-lg {
+    border-radius: 8px;
+    font-size: 1.2rem;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    border: none;
+    border-radius: 10px;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+</style>
+
+{% endblock %}

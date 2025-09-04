@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: qr-code-scanner
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn qrapp.wsgi:application"
+    envVars:
+      - key: DATABASE_URL
+        value: postgresql://sanika_user:OZNRmKlFkEA96NEkpaA6XYA5JVv4xV5s@dpg-d26ql2uuk2gs73cbcd50-a.oregon-postgres.render.com/qr_qrdata
+      - key: DEBUG
+        value: false
+envVars:
+  - key: DATABASE_URL
+    value: postgresql://sanika_user:OZNRmKlFkEA96NEkpaA6XYA5JVv4xV5s@dpg-d26ql2uuk2gs73cbcd50-a.oregon-postgres.render.com/qr_qrdata
+  - key: DEBUG
+    value: false
+  - key: ALLOWED_HOSTS
+    value: qr-code-scanner-ub2q.onrender.com

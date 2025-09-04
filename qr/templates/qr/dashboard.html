@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+</head>
+<body>
+    <h1>Welcome to Dashboard!</h1>
+    <p>Hello, {{ user.username }} 👋</p>
+
+    <!-- ✅ Proper Logout Button -->
+    <form method="post" action="{% url 'qr:logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Logout</button>
+    </form>
+</body>
+</html>

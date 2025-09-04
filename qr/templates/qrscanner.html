@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Qr Scanner | SANIKA-hub18</title>
+  {% load static %}
+  <link rel="icon" href="{% static 'favicon.ico' %}">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+        rel="stylesheet" crossorigin="anonymous" />
+</head>
+<body>
+<div class="container-fluid px-0 mx-0">
+  <div class="container col-lg-9 py-2 mb-2 mt-5 pt-5">
+    <div style="cursor: grab;">
+      <h3 class="text-center mb-3">QR Scan</h3>
+      <div style="margin: auto" class="text-center">
+        <!-- hidden canvas for drawing (used for both camera frame & uploaded image) -->
+        <canvas id="myCanvas" hidden></canvas>
+
+        <!-- live video stream -->
+        <video autoplay class="p-2 border border-lg" id="videoElement"></video>
+
+        <!-- preview of captured/uploaded image -->
+        <img id="my-data-uri" src="" class="img-fluid p-2" />
+
+        <p class="mt-3">
+          <button class="mt-2 px-4 me-2 btn btn-primary" id="cap" onclick="getCurrentFrame();">
+            Capture
+          </button>
+
+          <!-- Upload from gallery button -->
+          <button class="mt-2 px-3 btn btn-secondary" id="uploadBtn" onclick="document.getElementById('qrUpload').click()">
+            📁 Upload QR from Gallery
+          </button>
+
+          <button class="mt-2 px-4 me-5 btn btn-primary" id="recap" style="display: none" onclick="recapture();">
+            Re-capture
+          </button>
+          <button class="mt-2 ms-5 px-3 me-2 btn btn-success" id="done" style="display: none" onclick="postData();">
+            Done
+          </button>
+        </p>
+        <p class="fw-light" id="helpcap">
+          Lifehack: click anywhere inside the screen to capture the image — अथवा वरचा "Upload QR from Gallery" वापरा.
+        </p>
+
+        <!-- hidden file input for gallery upload -->
+        <input type="file" accept="image/*" id="qrUpload" style="display:none" onchange="handleQRUpload(event)">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- jsQR लायब्ररी -->
+<script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
+
+<script>
+ 
+  var canvas, ctx, video, beforeCapture = true, qrDetectedText = null;
+
+  navigator.getUserMedia =
+    navigator.getUserMedia ||
+    navigator.webkitGetUserMedia ||
+    navigator.mozGetUserMedia ||
+    navigator.msGetUserMedia;
+
+  video = document.querySelector("#videoElement");
+  canvas = document.getElementById("myCanvas");
+  ctx = canvas.getContext("2d");
+
+  function camera() {
+    if (navigator.mediaDevices.getUserMedia) {
+      let constraints = {
+        audio: false,
+        video: {
+          facingMode: { ideal: "environment" },
+          width: { min: 400, ideal: 400, max: 400 },
+          height: { min: 400, ideal: 400, max: 400 },
+        },
+      };
+      navigator.mediaDevices.getUserMedia(constraints)
+        .then(function (stream) {
+          video.srcObject = stream;
+          canvas.setAttribute("width", 400);
+          canvas.setAttribute("height", 400);
+        })
+        .catch(function (error) {
+          console.log(error, "Something went wrong!");
+        });
+    }
+  }
+
+  function stopCamera() {
+    try {
+      if (video && video.srcObject) {
+        var tracks = video.srcObject.getTracks();
+        tracks.forEach(function(track) { track.stop(); });
+        video.srcObject = null;
+      }
+    } catch (e) {
+      console.warn("stopCamera error:", e);
+    }
+  }
+
+  function getCurrentFrame() {
+    beforeCapture = false;
+    canvas.width = 400;
+    canvas.height = 400;
+    ctx.drawImage(video, 0, 0, 400, 400);
+
+    var imgData = ctx.getImageData(0, 0, 400, 400);
+    var code = jsQR(imgData.data, imgData.width, imgData.height);
+
+    if (code) {
+      console.log("QR Code detected:", code.data);
+      qrDetectedText = code.data;
+    } else {
+      alert("No QR code found! Please try again.");
+      return;
+    }
+
+    stopCamera();
+    video.style.display = "none";
+
+    var image = document.getElementById("my-data-uri");
+    image.src = canvas.toDataURL("image/png");
+    image.classList.add("border");
+
+    document.getElementById("cap").style.display = "none";
+    document.getElementById("uploadBtn").style.display = "none";
+    document.getElementById("done").style.display = "inline";
+    document.getElementById("recap").style.display = "inline";
+    document.getElementById("helpcap").style.display = "none";
+  }
+
+  function handleQRUpload(event) {
+    const file = event.target.files && event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const imageDataUrl = e.target.result;
+      scanQRFromImage(imageDataUrl);
+    };
+    reader.onerror = function(e) {
+      alert("Failed to read the image file.");
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function scanQRFromImage(imageDataUrl) {
+    var img = new Image();
+    img.onload = function() {
+      canvas.width = 400;
+      canvas.height = 400;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0, 400, 400);
+
+      try {
+        var imgData = ctx.getImageData(0, 0, 400, 400);
+      } catch (err) {
+        alert("Unable to access image data. (CORS or file issue)");
+        console.error(err);
+        return;
+      }
+      var code = jsQR(imgData.data, imgData.width, imgData.height);
+
+      if (code) {
+        console.log("QR Code detected from uploaded image:", code.data);
+        qrDetectedText = code.data;
+        beforeCapture = false;
+
+        stopCamera();
+        video.style.display = "none";
+
+        var image = document.getElementById("my-data-uri");
+        image.src = imageDataUrl;
+        image.classList.add("border");
+
+        document.getElementById("cap").style.display = "none";
+        document.getElementById("uploadBtn").style.display = "none";
+        document.getElementById("done").style.display = "inline";
+        document.getElementById("recap").style.display = "inline";
+        document.getElementById("helpcap").style.display = "none";
+      } else {
+        alert("No QR code found in uploaded image. कृपया वेगळा फोटो दाखवून पाहा.");
+      }
+    };
+    img.onerror = function() {
+      alert("Failed to load uploaded image.");
+    };
+    img.src = imageDataUrl;
+  }
+
+  function recapture() {
+    location.reload();
+  }
+
+  function postData() {
+    if (!qrDetectedText) {
+        alert("No QR data found. Please scan again.");
+        return;
+    }
+
+    let qrData;
+    try {
+        qrData = JSON.parse(qrDetectedText);  // Parse JSON from QR
+    } catch(e) {
+        alert("Invalid QR code format.");
+        return;
+    }
+
+    let name = qrData.name || "Unknown";
+    let meal = qrData.meal || "Lunch";
+    let qty  = qrData.qty || 1;
+
+    fetch("{% url 'qr:save_qr_data' %}", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": "{{ csrf_token }}"
+        },
+        body: JSON.stringify({ name: name, meal: meal, qty: qty })
+    })
+    .then(res => res.json())
+    .then(data => {
+        console.log(data);
+        if (data.status === 'success') {
+            alert("QR code data saved successfully!");
+        } else {
+            alert("Failed to save QR data.");
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        alert("Error saving QR data.");
+    });
+}
+
+
+  camera();
+
+  document.addEventListener("click", (e) => {
+    let clickedEl = e.target;
+    if (beforeCapture && clickedEl.tagName.toLowerCase() !== 'button' && clickedEl.id !== 'qrUpload') {
+      getCurrentFrame();
+    }
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous"></script>
+</body>
+</html>

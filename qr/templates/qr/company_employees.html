@@ -1,0 +1,60 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Employees in {{ company.name }}</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+<div class="container mt-5">
+  <h2>Employees in {{ company.name }}</h2>
+
+  <table class="table table-striped">
+    <thead>
+      <tr><th>Name</th><th>Email</th><th>Department</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+      {% for emp in employees %}
+      <tr>
+        <td>{{ emp.name }}</td>
+        <td>{{ emp.email }}</td>
+        <td>{{ emp.department.name }}</td>
+        <td>
+          <a href="{% url 'qr:edit_employee' company.id emp.id %}" class="btn btn-sm btn-warning">✏️ Edit</a>
+          <form method="POST" action="{% url 'qr:delete_employee' company.id emp.id %}" style="display:inline;" onsubmit="return confirm('Are you sure?');">
+            {% csrf_token %}
+            <button class="btn btn-sm btn-danger">🗑 Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="3">No employees found</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h4>Add New Employee</h4>
+  <form method="POST" action="{% url 'qr:add_employee' company.id %}">
+    {% csrf_token %}
+    <div class="mb-3">
+      <input type="text" class="form-control" name="name" placeholder="Employee name" required />
+    </div>
+    <div class="mb-3">
+      <input type="email" class="form-control" name="email" placeholder="Employee email" required />
+    </div>
+    <div class="mb-3">
+    <select name="department" class="form-control" required>
+      <option value="" disabled selected>Select Department</option>
+      {% for dept in departments %}
+        <option value="{{ dept.id }}">{{ dept.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+    <button class="btn btn-success" type="submit">Add Employee</button>
+  </form>
+
+  <a href="{% url 'qr:set_company' %}" class="btn btn-secondary mt-3">← Back to Companies</a>
+</div>
+</body>
+</html>

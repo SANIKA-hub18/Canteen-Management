@@ -1,0 +1,108 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View & Download Reports</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="p-4">
+
+<h5 class="mb-4">📊 Meal Reports</h5>
+
+<!-- Filter Form -->
+<form method="get" class="row g-3 mb-3">
+  <div class="col-md-3">
+    <label>Company</label>
+    <select name="company" class="form-select" onchange="this.form.submit()">
+      <option value="">-- Select Company --</option>
+      {% for comp in companies %}
+        <option value="{{ comp.id }}" {% if comp.id|stringformat:"s" == selected_company %}selected{% endif %}>
+          {{ comp.name }}
+        </option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="col-md-3">
+    <label>Department</label>
+    <select name="department" class="form-select" onchange="this.form.submit()">
+      <option value="">-- Select Department --</option>
+      {% for dept in departments %}
+        <option value="{{ dept.id }}" {% if dept.id|stringformat:"s" == selected_department %}selected{% endif %}>
+          {{ dept.name }}
+        </option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="col-md-3">
+    <label>Date From</label>
+    <input type="date" name="date_from" class="form-control"
+           value="{{ date_from|default:'' }}" onchange="this.form.submit()">
+  </div>
+
+  <div class="col-md-3">
+    <label>Date To</label>
+    <input type="date" name="date_to" class="form-control"
+           value="{{ date_to|default:'' }}" onchange="this.form.submit()">
+  </div>
+</form>
+
+<!-- Download Buttons -->
+<div class="mb-3">
+  <a href="?company={{ selected_company }}&department={{ selected_department }}&date_from={{ date_from }}&date_to={{ date_to }}&download=csv" class="btn btn-outline-primary">⬇️ Download CSV</a>
+  <a href="?company={{ selected_company }}&department={{ selected_department }}&date_from={{ date_from }}&date_to={{ date_to }}&download=excel" class="btn btn-outline-success">⬇️ Download Excel</a>
+  <a href="?company={{ selected_company }}&department={{ selected_department }}&date_from={{ date_from }}&date_to={{ date_to }}&download=pdf" class="btn btn-outline-danger">⬇️ Download PDF</a>
+</div>
+<!-- Print Button -->
+<div class="d-flex justify-content-end mb-3">
+  <button onclick="window.print()" class="btn btn-primary">
+    🖨️ Print Report
+  </button>
+</div>
+
+<!-- Reports Table -->
+<table id="reportsTable" class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Name/ID</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Meal</th>
+            <th>Qty</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for r in records %}
+        <tr>
+            <td>{{ r.employee.name }}</td>
+            <td>{{ r.date }}</td>
+            <td>{{ r.time }}</td>
+            <td>{{ r.meal }}</td>
+            <td>{{ r.quantity }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5" class="text-center">No records</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+
+<script>
+$(document).ready(function() {
+    $('#reportsTable').DataTable({
+        "pageLength": 10,
+        "order": [[ 1, "desc" ]]
+    });
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,5 @@
+*.exe
+*.log
+*.sqlite3
+__pycache__/
+venv*/
