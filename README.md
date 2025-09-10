@@ -11,7 +11,7 @@
 
 <h2>📖 Overview</h2>
 <p>
-Canteen Management System is a web-based application built with <strong>Django</strong> and <strong>PostgreSQL</strong>.  
+Canteen Management System is a web-based application built with <strong>Django</strong> and <strong>MySQL</strong>.  
 It simplifies and automates canteen operations like <strong>meal ordering</strong>, <strong>QR code scanning</strong>, and <strong>report generation</strong>.  
 Admins can manage menu items, upload menu cards, and track consumption seamlessly.
 </p>
