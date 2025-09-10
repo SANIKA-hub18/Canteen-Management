@@ -30,35 +30,49 @@ Admins can manage menu items, upload menu cards, and track consumption seamlessl
 ---
 
 <h2>⚙️ Installation</h2>
+<ol>
   <li>Clone the Repository</li>
+  <pre><code>git clone https://github.com/SANIKA-hub18/canteen-management.git
+cd canteen-management</code></pre>
 
-```bash
-git clone https://github.com/SANIKA-hub18/canteen-management.git
-cd canteen-management
-<li>Create Virtual Environment & Install Dependencies</li>
-python -m venv venv
+  <li>Create Virtual Environment & Install Dependencies</li>
+  <pre><code>python -m venv venv
 # On Linux/Mac
 source venv/bin/activate
 # On Windows
 venv\Scripts\activate
 
-pip install -r requirements.txt
-<li>Apply Migrations</li>
-python manage.py migrate
-<li>Run the Development Server</li>
-python manage.py runserver
+pip install -r requirements.txt</code></pre>
+
+  <li>Apply Migrations</li>
+  <pre><code>python manage.py migrate</code></pre>
+
+  <li>Run the Development Server</li>
+  <pre><code>python manage.py runserver</code></pre>
 </ol>
+
 <h2>📂 Project Structure</h2>
+<pre>
 canteen_management/
 ├── canteen/            # Main Django app
 ├── templates/          # HTML templates
 ├── static/             # CSS, JS, Images
 ├── manage.py
 └── requirements.txt
-<h2>🤝 Contributing</h2> <p> Contributions are always welcome! To contribute, fork the repository and create a feature branch: </p>
-git checkout -b feature/YourFeature
+</pre>
+
+<h2>🤝 Contributing</h2>
+<p>
+Contributions are always welcome! To contribute, fork the repository and create a feature branch:
+</p>
+<pre><code>git checkout -b feature/YourFeature
 git commit -m "Add YourFeature"
 git push origin feature/YourFeature
+</code></pre>
+<p>Then open a Pull Request 🚀</p>
 
-Then open a Pull Request 🚀
-<h2>📧 Contact</h2> <p> <strong>Maintainer:</strong> Sanika Shaligram <br> <strong>Email:</strong> shaligramsanika@gmail.com </p> 
+<h2>📧 Contact</h2>
+<p>
+<strong>Maintainer:</strong> Sanika Shaligram <br>
+<strong>Email:</strong> shaligramsanika@gmail.com
+</p>
