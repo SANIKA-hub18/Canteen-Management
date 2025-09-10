@@ -34,7 +34,7 @@ Admins can manage menu items, upload menu cards, and track consumption seamlessl
   <li>Clone the Repository</li>
 
 ```bash
-git clone https://github.com/yourusername/canteen-management.git
+git clone https://github.com/SANIKA-hub18/canteen-management.git
 cd canteen-management
 <li>Create Virtual Environment & Install Dependencies</li>
 python -m venv venv
