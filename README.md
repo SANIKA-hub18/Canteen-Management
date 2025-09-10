@@ -30,7 +30,6 @@ Admins can manage menu items, upload menu cards, and track consumption seamlessl
 ---
 
 <h2>⚙️ Installation</h2>
-<ol>
   <li>Clone the Repository</li>
 
 ```bash
