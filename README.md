@@ -1,4 +1,4 @@
-**Canteen Management System**
+##**Canteen Management System**##
 
 Automating Canteen Operations with QR-Based Meal Tracking
 
