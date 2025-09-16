@@ -6,18 +6,11 @@ from dotenv import load_dotenv
 # BASE DIR
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SECRET_KEY
-SECRET_KEY = 'django-insecure-c5)td6nx+c#n36_i_jn#&q7af98i#&^bxvr_rif!&+n9d9rt_+'
-
 # DEBUG MODE
 DEBUG = True
 
 # ALLOWED HOSTS (for local and Render)
 ALLOWED_HOSTS = [
-    'localhost',
-    '127.0.0.1',
-    'qr-code-scanner-and-generator.onrender.com',
-    'canteen-management-wwmm.onrender.com'
 ]
 
 # Load .env variables
@@ -68,12 +61,6 @@ WSGI_APPLICATION = 'qrapp.wsgi.application'
 # ✅ Database Setup → MySQL (canteen_management)
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'canteen_management',
-        'USER': 'root',
-        'PASSWORD': 'sanika',
-        'HOST': 'localhost',
-        'PORT': '3306',
     }
 }
 
@@ -104,10 +91,3 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 # settings.py
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'shaligramsanika@gmail.com'
-EMAIL_HOST_PASSWORD = 'rgnw gcjc lwib naja'  # Gmail App Password वापर
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
